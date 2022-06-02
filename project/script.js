@@ -5,16 +5,12 @@ const goods = [
   { title: 'Shoes', price: 250 },
 ];
 
-const GET_GOODS_ITEMS = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/catalogData.json'
-const GET_BASKET_GOODS_ITEMS = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/getBasket.json'
+const BASE_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/'
+const GET_GOODS_ITEMS = `${BASE_URL}catalogData.json`
+const GET_BASKET_GOODS_ITEMS = `${BASE_URL}getBasket.json`
 
-function service(url, callback) {
-  const xhr = new XMLHttpRequest();
-  xhr.open('GET', url);
-  xhr.send();
-  xhr.onload = () => {
-    callback(JSON.parse(xhr.response))
-  }
+function service(url) {
+  return fetch(url).then((res) => res.json())
 }
 
 class GoodsItem {
@@ -33,41 +29,61 @@ class GoodsItem {
 }
 class GoodsList {
   items = [];
-  fetchGoods(callback) {
-    service(GET_GOODS_ITEMS, (data) => {
-      debugger
+  filteredItems = [];
+
+  // получение товаров
+  fetchGoods() {
+    return service(GET_GOODS_ITEMS).then((data) => {
       this.items = data;
-      callback()
-    });
+      this.filteredItems = data;
+    })
+  }
+
+  // поиск товара
+  filterItems(value) {
+    this.filteredItems = this.items.filter(({ product_name }) => {
+      return product_name.match(new RegExp(value, 'gui'))
+    })
   }
 
   // считаем суммарную стоимость всех элементов goods
   getSum() {
     return this.items.reduce((prev, { price }) => {
-      return prev + price;
+      returnprev + price;
     }, 0)
   }
+
+  // открисовка товаров
   render() {
-    const goods = this.items.map(item => {
+    const goods = this.filteredItems.map(item => {
       const goodItem = new GoodsItem(item);
       return goodItem.render()
     }).join('');
-
     document.querySelector('.goods-list').innerHTML = goods;
   }
 }
 
-class BasketGoods {
+class BasketGoodsList {
   items = [];
-  fetchGoods(callback = () => { }) {
+  fetchGoods() {
     service(GET_BASKET_GOODS_ITEMS, (data) => {
-      this.items = data;
-      callback()
+      this.items = data.contents;
     });
   }
 }
 
 const goodsList = new GoodsList();
-goodsList.fetchGoods(() => {
+goodsList.fetchGoods().then(() => {
   goodsList.render();
 });
+
+const basketGoodsList = new BasketGoodsList();
+basketGoodsList.fetchGoods();
+
+document.getElementsByClassName('search-button')[0].addEventListener('click', () => {
+  const value = document.getElementsByClassName('goods-search')[0].value;
+  goodsList.filterItems(value);
+  goodsList.render();
+})
+
+
