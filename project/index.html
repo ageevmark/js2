@@ -5,29 +5,42 @@
    <meta charset="UTF-8">
    <title>eShop</title>
    <link rel="stylesheet" href="style.css">
+   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+   <script src="script.js"></script>
 </head>
 
 <body>
-   <header>
-      <div class="header wrapper">
-         <h1 class="title">
-            <a href="#">eShop</a>
-         </h1>
-         <div class="actions">
-            <button class="cart-button" type="button">
-               <svg height="48" viewBox="0 0 48 48" width="48" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                     d="M14 36c-2.21 0-3.98 1.79-3.98 4s1.77 4 3.98 4 4-1.79 4-4-1.79-4-4-4zM2 4v4h4l7.19 15.17-2.7 4.9c-.31.58-.49 1.23-.49 1.93 0 2.21 1.79 4 4 4h24v-4H14.85c-.28 0-.5-.22-.5-.5 0-.09.02-.17.06-.24L16.2 26h14.9c1.5 0 2.81-.83 3.5-2.06l7.15-12.98c.16-.28.25-.61.25-.96 0-1.11-.9-2-2-2H10.43l-1.9-4H2zm32 32c-2.21 0-3.98 1.79-3.98 4s1.77 4 3.98 4 4-1.79 4-4-1.79-4-4-4z" />
-                  <path d="M0 0h48v48H0z" fill="none" />
-               </svg>
-            </button>
+   <div id="root">
+      <header>
+         <div class="header wrapper">
+            <h1 class="title">
+               <a href="#">eShop</a>
+            </h1>
+
+            <div class="searsh">
+               <input type="text" class="goods-search" v-model="searchValue" placeholder="Найти">
+            </div>
+
+            <div class="actions">
+               <button class="cart-button" type="button">
+                  <svg height="48" viewBox="0 0 48 48" width="48" xmlns="http://www.w3.org/2000/svg">
+                     <path
+                        d="M14 36c-2.21 0-3.98 1.79-3.98 4s1.77 4 3.98 4 4-1.79 4-4-1.79-4-4-4zM2 4v4h4l7.19 15.17-2.7 4.9c-.31.58-.49 1.23-.49 1.93 0 2.21 1.79 4 4 4h24v-4H14.85c-.28 0-.5-.22-.5-.5 0-.09.02-.17.06-.24L16.2 26h14.9c1.5 0 2.81-.83 3.5-2.06l7.15-12.98c.16-.28.25-.61.25-.96 0-1.11-.9-2-2-2H10.43l-1.9-4H2zm32 32c-2.21 0-3.98 1.79-3.98 4s1.77 4 3.98 4 4-1.79 4-4-1.79-4-4-4z" />
+                     <path d="M0 0h48v48H0z" fill="none" />
+                  </svg>
+               </button>
+            </div>
          </div>
-      </div>
-   </header>
-   <main>
-      <div class="goods-list"></div>
-   </main>
-   <script src="script.js"></script>
+      </header>
+      <main>
+         <div class="goods-list">
+            <div class="goods-item" v-for="item in filteredItems">
+               <h3>{{ item.product_name }}</h3>
+               <p>{{ item.price }}</p>
+            </div>
+         </div>
+      </main>
+   </div>
 </body>
 
 </html>
