@@ -1,10 +1,3 @@
-const goods = [
-  { title: 'Shirt', price: 150 },
-  { title: 'Socks', price: 50 },
-  { title: 'Jacket', price: 350 },
-  { title: 'Shoes', price: 250 },
-];
-
 const BASE_URL = 'https://raw.githubusercontent.com/GeekBrainsTutorial/online-store-api/master/responses/'
 const GET_GOODS_ITEMS = `${BASE_URL}catalogData.json`
 const GET_BASKET_GOODS_ITEMS = `${BASE_URL}getBasket.json`
@@ -72,18 +65,46 @@ class BasketGoodsList {
   }
 }
 
-const goodsList = new GoodsList();
-goodsList.fetchGoods().then(() => {
-  goodsList.render();
-});
+// const goodsList = new GoodsList();
+// goodsList.fetchGoods().then(() => {
+//   goodsList.render();
+// });
 
-const basketGoodsList = new BasketGoodsList();
-basketGoodsList.fetchGoods();
+// const basketGoodsList = new BasketGoodsList();
+// basketGoodsList.fetchGoods();
 
-document.getElementsByClassName('search-button')[0].addEventListener('click', () => {
-  const value = document.getElementsByClassName('goods-search')[0].value;
-  goodsList.filterItems(value);
-  goodsList.render();
-})
+// document.getElementsByClassName('search-button')[0].addEventListener('click', () => {
+//   const value = document.getElementsByClassName('goods-search')[0].value;
+//   goodsList.filterItems(value);
+//   goodsList.render();
+// })
 
 
+window.onload = () => {
+  const app = new Vue({
+    el: '#root',
+    data: {
+      items: [],
+      filteredItems: [],
+      searchValue: ''
+    },
+    mounted() {
+      service(GET_GOODS_ITEMS).then((data) => {
+        this.items = data;
+        return data;
+      })
+    },
+    computed: {
+      getSum() {
+        return this.items.reduce((prev, { price }) => {
+          returnprev + price;
+        }, 0)
+      },
+      filteredItems() {
+        return this.items.filter(({ product_name }) => {
+          return product_name.match(new RegExp(value, 'gui'))
+        })
+      }
+    }
+  })
+}
